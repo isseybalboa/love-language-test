@@ -28,3 +28,24 @@ document.getElementById("app").innerHTML = `
 <button onclick="start('female')">女性</button>
 `;
 }
+
+function showQuestion(){
+
+const list = gender === "male" ? maleQuestions : femaleQuestions;
+const q = list[current];
+
+document.getElementById("app").innerHTML = `
+
+<h3>Q${current+1}</h3>
+
+<button onclick="answer('${q.a.type}')">
+${q.a.text}
+</button>
+
+<button onclick="answer('${q.b.type}')">
+${q.b.text}
+</button>
+
+`;
+}
+
