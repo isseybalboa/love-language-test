@@ -1,13 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="ja">
 <head>
 <meta charset="UTF-8">
 <title>ラブランゲージ診断</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body{
+font-family:sans-serif;
+background:#f5f5f5;
+margin:0;
+display:flex;
+justify-content:center;
+}
+
+#app{
+width:100%;
+max-width:500px;
+background:white;
+min-height:100vh;
+padding:25px;
+box-sizing:border-box;
+}
+
+h2{
+text-align:center;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:#4CAF50;
+color:white;
+font-size:16px;
+cursor:pointer;
+}
+
+button:hover{
+background:#43a047;
+}
+
+.option{
+background:#f0f0f0;
+color:#333;
+}
+
+.progress{
+height:10px;
+background:#ddd;
+border-radius:10px;
+margin-bottom:20px;
+overflow:hidden;
+}
+
+.progress-bar{
+height:100%;
+background:#4CAF50;
+width:0%;
+}
+
+.result-card{
+background:#fafafa;
+padding:15px;
+margin-top:10px;
+border-radius:10px;
+}
+
+</style>
 </head>
 
 <body>
-
-<h1>ラブランゲージ診断</h1>
 
 <div id="app"></div>
 
