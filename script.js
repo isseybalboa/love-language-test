@@ -1,43 +1,30 @@
-let scores={
-word:0,
-time:0,
-gift:0,
-service:0,
-touch:0
+let gender = null;
+let current = 0;
+
+let scores = {
+A:0,
+B:0,
+C:0,
+D:0,
+E:0
 };
 
-let current=0;
-
-function answer(type){
-scores[type]++;
-current++;
-
-if(current>=questions.length){
-showResult();
-}else{
+function start(g){
+gender = g;
+current = 0;
 showQuestion();
 }
-}
 
-function showQuestion(){
-const q=questions[current];
+function showGenderSelect(){
 
-document.getElementById("app").innerHTML=`
-<h2>${q.q}</h2>
-<button onclick="answer('${q.a.type}')">${q.a.text}</button>
-<button onclick="answer('${q.b.type}')">${q.b.text}</button>
+document.getElementById("app").innerHTML = `
+<h2>ラブランゲージ診断</h2>
+
+<p>
+各組の設問を読んで、あなたの希望・要望をよりよく表現していると思うほうを選んでください。
+</p>
+
+<button onclick="start('male')">男性</button>
+<button onclick="start('female')">女性</button>
 `;
 }
-
-function showResult(){
-document.getElementById("app").innerHTML=`
-<h2>結果</h2>
-<p>言葉: ${scores.word}</p>
-<p>時間: ${scores.time}</p>
-<p>贈り物: ${scores.gift}</p>
-<p>奉仕: ${scores.service}</p>
-<p>スキンシップ: ${scores.touch}</p>
-`;
-}
-
-showQuestion();
