@@ -49,3 +49,49 @@ ${q.b.text}
 `;
 }
 
+function answer(type){
+
+scores[type]++;
+
+current++;
+
+const list = gender === "male" ? maleQuestions : femaleQuestions;
+
+if(current >= list.length){
+showResult();
+}else{
+showQuestion();
+}
+
+}
+
+function showResult(){
+
+const desc = {
+
+A:"言葉タイプ：励ましや感謝の言葉で愛情を感じる",
+B:"時間タイプ：一緒に過ごす時間で愛情を感じる",
+C:"贈り物タイプ：プレゼントで愛情を感じる",
+D:"奉仕タイプ：手伝いや行動で愛情を感じる",
+E:"スキンシップタイプ：触れ合いで愛情を感じる"
+
+};
+
+let html = "<h2>診断結果</h2>";
+
+for(let key in scores){
+
+html += `
+<p>
+${key} : ${scores[key]}<br>
+${desc[key]}
+</p>
+`;
+
+}
+
+document.getElementById("app").innerHTML = html;
+
+}
+
+showGenderSelect();
