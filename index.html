@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>💕 ラブランゲージ診断</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Pacifico&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --pink: #FF6B9D; --coral: #FF8E72; --yellow: #FFD93D;
+    --mint: #6BCB77; --lavender: #C77DFF; --sky: #74C0FC;
+    --bg: #FFF5F8; --card: #FFFFFF; --text: #3D2C8D; --text-soft: #9B86BD;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Zen Maru Gothic', sans-serif; background: var(--bg); min-height: 100vh; overflow-x: hidden; }
+  body::before { content: ''; position: fixed; inset: 0; background: radial-gradient(circle at 15% 20%, rgba(255,107,157,0.15) 0%, transparent 40%), radial-gradient(circle at 85% 80%, rgba(199,125,255,0.15) 0%, transparent 40%); pointer-events: none; z-index: 0; }
+  .deco { position: fixed; font-size: 1.4rem; opacity: 0.2; animation: floatDeco 6s ease-in-out infinite; pointer-events: none; z-index: 0; }
+  .deco:nth-child(1){top:8%;left:5%} .deco:nth-child(2){top:20%;right:8%;animation-delay:1s;font-size:1rem}
+  .deco:nth-child(3){bottom:15%;left:10%;animation-delay:2s} .deco:nth-child(4){bottom:25%;right:5%;animation-delay:3s}
+  .deco:nth-child(5){top:50%;left:3%;animation-delay:1.5s;font-size:.9rem} .deco:nth-child(6){top:65%;right:3%;animation-delay:2.5s}
+  @keyframes floatDeco{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-12px) rotate(10deg)}}
+  .app { position: relative; z-index: 1; max-width: 640px; margin: 0 auto; padding: 24px 16px 60px; }
+  .header { text-align: center; margin-bottom: 28px; animation: fadeDown .6s ease; }
+  .header .logo { font-family: 'Pacifico', cursive; font-size: 2rem; background: linear-gradient(135deg, var(--pink), var(--lavender)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .header .subtitle { color: var(--text-soft); font-size: .82rem; margin-top: 6px; font-weight: 500; }
+  .card { background: var(--card); border-radius: 28px; padding: 28px 24px; box-shadow: 0 8px 32px rgba(255,107,157,.12), 0 2px 8px rgba(61,44,141,.06); animation: fadeUp .45s ease; }
+
+  /* GENDER */
+  .gender-intro { text-align: center; margin-bottom: 20px; }
+  .big-emoji { font-size: 3.2rem; margin-bottom: 12px; animation: pulse 2s ease-in-out infinite; display: block; }
+  .gender-intro h2 { font-size: 1.35rem; font-weight: 900; color: var(--text); margin-bottom: 10px; }
+  .gender-intro p { color: #666; font-size: .88rem; line-height: 1.8; }
+  .notice-box { background: #FFF8E6; border-left: 4px solid var(--yellow); border-radius: 12px; padding: 12px 16px; font-size: .82rem; color: #7A6200; line-height: 1.75; margin: 18px 0 24px; }
+  .gender-label { text-align: center; font-weight: 700; color: var(--text); margin-bottom: 14px; font-size: .9rem; }
+  .gender-btns { display: flex; gap: 14px; }
+  .gender-btn { flex: 1; padding: 20px 10px; border-radius: 22px; border: 3px solid #EDE0FF; background: var(--bg); cursor: pointer; font-family: 'Zen Maru Gothic', sans-serif; font-weight: 900; font-size: 1.1rem; color: var(--text); transition: all .25s cubic-bezier(.34,1.56,.64,1); display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .gender-btn .g-emoji { font-size: 2.2rem; }
+  .gender-btn:hover { transform: translateY(-4px); box-shadow: 0 10px 28px rgba(255,107,157,.2); }
+  .gender-btn.male:hover { border-color: var(--sky); background: #F0F8FF; }
+  .gender-btn.female:hover { border-color: var(--pink); background: #FFF0F6; }
+
+  /* PROGRESS */
+  .progress-area { margin-bottom: 20px; }
+  .progress-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+  .progress-label { font-size: .78rem; font-weight: 700; color: var(--text-soft); }
+  .progress-count { font-size: .82rem; font-weight: 900; color: var(--pink); }
+  .progress-bar-bg { background: #F0E6FF; border-radius: 10px; height: 10px; overflow: hidden; }
+  .progress-bar-fill { height: 100%; border-radius: 10px; background: linear-gradient(90deg, var(--pink), var(--lavender)); transition: width .4s cubic-bezier(.34,1.56,.64,1); }
+
+  /* QUIZ */
+  .q-label { background: linear-gradient(135deg, var(--pink), var(--coral)); color: white; font-size: .72rem; font-weight: 900; padding: 4px 14px; border-radius: 20px; display: inline-block; margin-bottom: 14px; letter-spacing: .05em; }
+  .q-hint { font-size: .85rem; color: #888; font-style: italic; line-height: 1.6; margin-bottom: 20px; }
+  .options { display: flex; flex-direction: column; gap: 12px; }
+  .option-btn { background: var(--bg); border: 2.5px solid #EDE0FF; border-radius: 18px; padding: 16px 20px; cursor: pointer; text-align: left; transition: all .2s cubic-bezier(.34,1.56,.64,1); display: flex; align-items: flex-start; gap: 14px; font-family: 'Zen Maru Gothic', sans-serif; }
+  .option-btn:hover { border-color: var(--pink); background: #FFF0F6; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,107,157,.15); }
+  .option-btn:active { transform: scale(.98); }
+  .option-circle { width: 34px; height: 34px; border-radius: 50%; background: linear-gradient(135deg, var(--pink), var(--lavender)); color: white; font-weight: 900; font-size: .85rem; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .option-text { font-size: .92rem; color: #444; line-height: 1.7; font-weight: 500; }
+
+  /* RESULT */
+  .result-header { text-align: center; margin-bottom: 24px; }
+  .result-emoji { font-size: 3.5rem; animation: bounceIn .6s cubic-bezier(.34,1.56,.64,1); display: block; }
+  .result-title { font-size: 1.5rem; font-weight: 900; color: var(--text); margin: 10px 0 4px; }
+  .result-sub { color: var(--text-soft); font-size: .84rem; }
+  @keyframes bounceIn{0%{transform:scale(0);opacity:0}100%{transform:scale(1);opacity:1}}
+  .result-card { border-radius: 20px; padding: 20px; margin-bottom: 16px; border: 2px solid transparent; }
+  .result-lang-name { font-size: 1.1rem; font-weight: 900; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .result-lang-desc { font-size: .87rem; color: #555; line-height: 1.75; }
+  .rank-badge { display: inline-flex; align-items: center; gap: 3px; font-size: .7rem; padding: 2px 8px; border-radius: 10px; font-weight: 700; background: var(--yellow); color: #7A5C00; }
+  .rank-badge.second { background: #E8E8E8; color: #555; }
+  .bars { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+  .bar-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+  .bar-name { font-size: .82rem; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+  .bar-score { font-size: .82rem; font-weight: 900; }
+  .bar-bg { height: 10px; background: #EDE0FF; border-radius: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 6px; transition: width 1s cubic-bezier(.34,1.56,.64,1); }
+  .tips-title { font-size: .93rem; font-weight: 900; color: var(--text); margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+  .tip-item { background: var(--bg); border-radius: 14px; padding: 12px 16px; font-size: .85rem; color: #555; line-height: 1.65; margin-bottom: 8px; border-left: 3px solid var(--pink); }
+
+  .btn-primary { width: 100%; background: linear-gradient(135deg, var(--pink), var(--lavender)); color: white; border: none; border-radius: 20px; padding: 16px 24px; font-family: 'Zen Maru Gothic', sans-serif; font-size: 1rem; font-weight: 900; cursor: pointer; transition: all .2s; box-shadow: 0 6px 20px rgba(255,107,157,.35); }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(255,107,157,.45); }
+  .btn-secondary { width: 100%; background: white; color: var(--pink); border: 2.5px solid var(--pink); border-radius: 20px; padding: 14px 24px; font-family: 'Zen Maru Gothic', sans-serif; font-size: .95rem; font-weight: 900; cursor: pointer; transition: all .2s; margin-top: 10px; }
+  .btn-secondary:hover { background: #FFF0F6; }
+  .btn-back { margin-top: 18px; width: 100%; background: transparent; color: var(--text-soft); border: 2px solid #EDE0FF; border-radius: 16px; padding: 11px 20px; font-family: 'Zen Maru Gothic', sans-serif; font-size: .85rem; font-weight: 700; cursor: pointer; transition: all .2s; }
+  .btn-back:hover { border-color: var(--lavender); color: var(--text); background: #F8F0FF; }
+  @keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fadeDown{from{opacity:0;transform:translateY(-15px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+  #confetti{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100}
+</style>
+</head>
+<body>
+<div class="deco">💕</div><div class="deco">🌸</div><div class="deco">✨</div>
+<div class="deco">💫</div><div class="deco">🌷</div><div class="deco">💝</div>
+<canvas id="confetti"></canvas>
+<div class="app">
+  <div class="header">
+    <div class="logo">Love Language</div>
+    <div class="subtitle">💕 愛の5つの言語 診断テスト</div>
+  </div>
+  <div id="screen"></div>
+</div>
+<script>
+const LANGS = {
+  A:{name:"肯定的な言葉",emoji:"💬",color:"#FF6B9D",desc:"「ありがとう」「好きだよ」「誇りに思う」など、言葉で愛情を伝え・受け取ることで深く満たされます。褒め言葉や励ましの言葉が心の栄養源。批判的な言葉は特に傷つきやすい傾向があります。"},
+  B:{name:"クオリティ・タイム",emoji:"⏳",color:"#74C0FC",desc:"二人きりで過ごす質の高い時間に愛を感じます。スマホを置いて相手に集中すること、一緒に出かけたり話を真剣に聴いてもらえることが、最大の愛情表現になります。"},
+  C:{name:"贈り物",emoji:"🎁",color:"#FFD93D",desc:"プレゼントや「あなたのことを考えていたよ」という形ある表現に愛を感じます。価格より「選んでくれた」という気持ちが大切。記念日や誕生日を覚えてもらえることも重要です。"},
+  D:{name:"サービス行為",emoji:"🛠️",color:"#6BCB77",desc:"料理・家事・手伝いなど、行動で愛情を示し・受け取ります。「やってあげること」が最も雄弁な愛のことば。頼まなくても気づいて動いてくれることに特に感動します。"},
+  E:{name:"身体的なタッチ",emoji:"🤗",color:"#C77DFF",desc:"ハグ・手をつなぐ・キスなど、身体的な接触を通じて繋がりと愛を感じます。そばにいてくれるだけで安心できる存在。スキンシップが愛情確認の中心にあります。"}
+};
+
+const Q_MALE=[
+  {q1:{t:"彼女から愛情のこもったメモやカードをもらうと気分がいい。",l:"A"},q2:{t:"彼女に抱きつかれると嬉しい。",l:"E"}},
+  {q1:{t:"彼女と二人きりでいるのが好きだ。",l:"B"},q2:{t:"彼女が庭仕事などを手伝ってくれると、彼女の愛情を感じる。",l:"D"}},
+  {q1:{t:"彼女から特別の贈り物をもらうと幸せを感じる。",l:"C"},q2:{t:"彼女と長期の旅行に出かけるのが好きだ。",l:"B"}},
+  {q1:{t:"彼女が私の洋服を洗濯してくれると愛情を感じる。",l:"D"},q2:{t:"彼女に触られるのが好きだ。",l:"E"}},
+  {q1:{t:"彼女が肩などに腕を回してくると、「愛されている」と感じる。",l:"E"},q2:{t:"彼女が贈り物で私を驚かせてくれると、彼女に愛されているとわかる。",l:"C"}},
+  {q1:{t:"彼女とならどこに行くのも好きだ。",l:"B"},q2:{t:"彼女と手をつなぐのが好きだ。",l:"E"}},
+  {q1:{t:"彼女のくれる贈り物を大切に思う。",l:"C"},q2:{t:"彼女に「愛してる」と言われるのが好きだ。",l:"A"}},
+  {q1:{t:"彼女がぴったりとそばに座ってくれるのが好きだ。",l:"E"},q2:{t:"彼女が「かっこいい」とか、「きまってる」と言ってくれると嬉しい。",l:"A"}},
+  {q1:{t:"彼女と一緒に時間を過ごす時に幸せを感じる。",l:"B"},q2:{t:"どんなに小さなものでも、彼女からの贈り物は私にとって大事な物だ。",l:"C"}},
+  {q1:{t:"彼女に「誇りに思う」と言われる時、「愛されている」と感じる。",l:"A"},q2:{t:"彼女が私のために料理をしてくれると、彼女に愛されていることがわかる。",l:"D"}},
+  {q1:{t:"何であれ、彼女と一緒に何かをするのが好きだ。",l:"B"},q2:{t:"彼女の励ましの言葉を聞くと嬉しい。",l:"A"}},
+  {q1:{t:"彼女が私のために細々としたことをやってくれることは、言葉よりも心にしみる。",l:"D"},q2:{t:"彼女を腕に抱くのが好きだ。",l:"E"}},
+  {q1:{t:"彼女のほめ言葉は私にとって重要だ。",l:"A"},q2:{t:"彼女が私の本当に気にいる物をプレゼントしてくれるととても嬉しい。",l:"C"}},
+  {q1:{t:"彼女のそばにいるだけで気分がいい。",l:"B"},q2:{t:"彼女にマッサージしてもらうのが大好きだ。",l:"E"}},
+  {q1:{t:"私が成し遂げたことに対する彼女の反応にとても励まされる。",l:"A"},q2:{t:"彼女が本当はやりたくないことをして私を助けてくれる時、感動する。",l:"D"}},
+  {q1:{t:"彼女のキスならいつでも歓迎だ。",l:"E"},q2:{t:"私のしたいことに彼女が心から関心を示してくれると嬉しい。",l:"B"}},
+  {q1:{t:"手伝いが必要な時、彼女は頼りになる。",l:"D"},q2:{t:"彼女からもらったプレゼントを開ける時は、今でもわくわくする。",l:"C"}},
+  {q1:{t:"彼女が私の外見をほめてくれるのが好きだ。",l:"A"},q2:{t:"彼女は私の話に耳を傾け、すぐに裁いたり批判したりしないところが好きだ。",l:"B"}},
+  {q1:{t:"彼女が近くにいると触らずにいられない。",l:"E"},q2:{t:"彼女が時々私のためにお使いに行ってくれることをありがたく思う。",l:"D"}},
+  {q1:{t:"いろいろと私を助けてくれる彼女は、表彰されるべきだ。",l:"D"},q2:{t:"彼女はなんて思いのこもった贈り物をくれることかと、感動することがある。",l:"C"}},
+  {q1:{t:"彼女が私に一心の注意を向けてくれるととても嬉しい。",l:"B"},q2:{t:"家をきれいにしておくことは大切なサービス行為だと思う。",l:"D"}},
+  {q1:{t:"私の誕生日に彼女が何をくれるか、いつも楽しみだ。",l:"C"},q2:{t:"私が大切な存在だということを、彼女にいつでも何度でも言われたい。",l:"A"}},
+  {q1:{t:"私にプレゼントをくれることで、彼女は私への愛を伝えてくれる。",l:"C"},q2:{t:"彼女は家の周りの仕事を手伝うことで愛情を示してくれる。",l:"D"}},
+  {q1:{t:"彼女が私の話を中断しないで聞いてくれるところが好きだ。",l:"B"},q2:{t:"彼女からのプレゼントなら、いつでもいつまでも嬉しい。",l:"C"}},
+  {q1:{t:"彼女は私が疲れていると、それを察して、何をして手伝ったらいいかと尋ねてくれる。",l:"D"},q2:{t:"目的地がどこだろうと、とにかく彼女と一緒に出かけるのが好きだ。",l:"B"}},
+  {q1:{t:"彼女とセックスするのが大好きだ。",l:"E"},q2:{t:"彼女のプレゼントに驚かされるのが大好きだ。",l:"C"}},
+  {q1:{t:"彼女の励ましの言葉が私に自信を与えてくれる。",l:"A"},q2:{t:"彼女と映画を見るのが好きだ。",l:"B"}},
+  {q1:{t:"彼女からのプレゼントに勝る贈り物はない。",l:"C"},q2:{t:"彼女に触らずにはいられない。",l:"E"}},
+  {q1:{t:"彼女が、ほかにやることがあるのに私を手伝ってくれる時、とてもありがたく思う。",l:"D"},q2:{t:"「感謝してる」と彼女が言ってくれると、ものすごく気分がいい。",l:"A"}},
+  {q1:{t:"しばらく離れていたあと、彼女を抱き寄せてキスするのが好きだ。",l:"E"},q2:{t:"私を信頼している、と彼女に言ってもらうのが好きだ。",l:"A"}}
+];
+
+const Q_FEMALE=[
+  {q1:{t:"彼から優しい言葉の書かれたメモやカードをもらうと気分がいい。",l:"A"},q2:{t:"彼に抱き寄せられると嬉しい。",l:"E"}},
+  {q1:{t:"彼と二人きりでいるのが好き。",l:"B"},q2:{t:"彼が私の車を洗ってくれると、彼からの愛情を感じる。",l:"D"}},
+  {q1:{t:"彼から特別の贈り物をもらうと幸せを感じる。",l:"C"},q2:{t:"彼と長期の旅行に出かけるのが好き。",l:"B"}},
+  {q1:{t:"彼が洗濯の手伝いをしてくれると、愛情を感じる。",l:"D"},q2:{t:"彼に触られるのが好き。",l:"E"}},
+  {q1:{t:"彼が肩などに腕を回してくると、「愛されている」と感じる。",l:"E"},q2:{t:"彼が贈り物で私を驚かせてくれると、彼に愛されていることがわかる。",l:"C"}},
+  {q1:{t:"彼とならどこへ行くのも好き。",l:"B"},q2:{t:"彼と手をつなぐのが好き。",l:"E"}},
+  {q1:{t:"彼のくれる贈り物を大切に思う。",l:"C"},q2:{t:"彼に「愛してる」と言われるのが好き。",l:"A"}},
+  {q1:{t:"彼がぴったりとそばに座ってくれるのが好き。",l:"E"},q2:{t:"彼が「その服、似合ってるよ」とか、「きれいだ」などと言ってくれると嬉しい。",l:"A"}},
+  {q1:{t:"彼と一緒に時間を過ごす時に幸せを感じる。",l:"B"},q2:{t:"どんなに小さなものでも、彼からの贈り物は私にとって大事な物。",l:"C"}},
+  {q1:{t:"彼に「誇りに思う」と言われる時、「愛されている」と感じる。",l:"A"},q2:{t:"彼が食事の後片付けをしてくれると、愛されていることがわかる。",l:"D"}},
+  {q1:{t:"何であれ、彼と一緒に何かをするのが好き。",l:"B"},q2:{t:"彼の励ましの言葉を聞くと嬉しい。",l:"A"}},
+  {q1:{t:"彼が私のために細々としたことをやってくれることは、言葉よりも心にしみる。",l:"D"},q2:{t:"彼に抱きつくのが好き。",l:"E"}},
+  {q1:{t:"彼のほめ言葉は私にとって重要だ。",l:"A"},q2:{t:"彼が私の本当に気にいる物をプレゼントしてくれるととても嬉しい。",l:"C"}},
+  {q1:{t:"彼のそばにいるだけで気分がいい。",l:"B"},q2:{t:"彼にマッサージしてもらうのが大好き。",l:"E"}},
+  {q1:{t:"私が成し遂げたことに対する彼の反応にとても励まされる。",l:"A"},q2:{t:"彼が本当はやりたくないことをして私を助けてくれる時、感動する。",l:"D"}},
+  {q1:{t:"彼のキスならいつでも歓迎だ。",l:"E"},q2:{t:"私のしたいことに彼が心から関心を示してくれると嬉しい。",l:"B"}},
+  {q1:{t:"手伝いが必要な時、彼は頼りになる。",l:"D"},q2:{t:"彼からもらったプレゼントを開ける時は、今でもわくわくする。",l:"C"}},
+  {q1:{t:"彼が私の外見をほめてくれるのが好きだ。",l:"A"},q2:{t:"彼は私の話に耳を傾け、すぐに裁いたり批判したりしないところが好きだ。",l:"B"}},
+  {q1:{t:"彼が近くにいると触らずにいられない。",l:"E"},q2:{t:"彼が時々私のためにお使いに行ってくれることをありがたく思う。",l:"D"}},
+  {q1:{t:"いろいろと私を助けてくれる彼は、表彰されるべきだと思う。",l:"D"},q2:{t:"彼はなんて思いのこもった贈り物をくれることかと、感動することがある。",l:"C"}},
+  {q1:{t:"彼が私に一心の注意を向けてくれると、とても嬉しい。",l:"B"},q2:{t:"彼が家の掃除を手伝ってくれることに感謝している。",l:"D"}},
+  {q1:{t:"私の誕生日に彼が何をくれるか、いつも楽しみ。",l:"C"},q2:{t:"私が大切な存在だということを、彼にいつでも何度でも言われたい。",l:"A"}},
+  {q1:{t:"私にプレゼントをくれることで、彼は私への愛を伝えてくれる。",l:"C"},q2:{t:"頼まなくても手伝ってくれることで、私に対する彼の愛がわかる。",l:"D"}},
+  {q1:{t:"彼が私の話を中断しないで聞いてくれるところが好きだ。",l:"B"},q2:{t:"彼からのプレゼントなら、いつでもいつまでも嬉しい。",l:"C"}},
+  {q1:{t:"彼は私が疲れているとそれを察して、何をして手伝ったらいいかと尋ねてくれる。",l:"D"},q2:{t:"目的地がどこだろうと、とにかく彼と一緒に出かけるのが好き。",l:"B"}},
+  {q1:{t:"彼と抱き合うのが大好き。",l:"E"},q2:{t:"彼のプレゼントに驚かされるのが大好きだ。",l:"C"}},
+  {q1:{t:"彼の励ましの言葉が私に自信を与えてくれる。",l:"A"},q2:{t:"彼と映画を見るのが好き。",l:"B"}},
+  {q1:{t:"彼からのプレゼントに勝る贈り物はない。",l:"C"},q2:{t:"彼が私に触らずにいられないことが嬉しい。",l:"E"}},
+  {q1:{t:"彼が忙しいのに私を手伝ってくれる時、とてもありがたく思う。",l:"D"},q2:{t:"「感謝してる」と彼が言ってくれると、ものすごく気分がいい。",l:"A"}},
+  {q1:{t:"しばらく離れていたあと、彼を抱きしめてキスするのが好き。",l:"E"},q2:{t:"私がいなくて寂しかったと彼に言われるのが好き。",l:"A"}}
+];
+
+let gender=null, questions=[], scores={A:0,B:0,C:0,D:0,E:0}, current=0, phase='gender';
+
+function render(){
+  const s=document.getElementById('screen');
+  if(phase==='gender') renderGender(s);
+  else if(phase==='quiz') renderQuiz(s);
+  else renderResult(s);
+}
+
+function renderGender(s){
+  s.innerHTML=`<div class="card">
+    <div class="gender-intro">
+      <span class="big-emoji">💝</span>
+      <h2>愛の5つの言語 診断テスト</h2>
+      <p>ゲイリー・チャップマン博士の原典をもとにした<br>30問の本格診断です。</p>
+    </div>
+    <div class="notice-box">📋 各組の設問を読んで、あなたの希望・要望をよりよく表現していると思うほうの文章を選んでください。なるべくリラックスした環境でテストし、あわてて終わらせることは避けてください。</div>
+    <p class="gender-label">まず、あなたの性別を選んでください</p>
+    <div class="gender-btns">
+      <button class="gender-btn male" onclick="selectGender('male')"><span class="g-emoji">👨</span><span>男性</span></button>
+      <button class="gender-btn female" onclick="selectGender('female')"><span class="g-emoji">👩</span><span>女性</span></button>
+    </div>
+  </div>`;
+}
+
+function renderQuiz(s){
+  const q=questions[current];
+  const pct=Math.round(current/questions.length*100);
+  const backBtn=current>0?`<button class="btn-back" onclick="goBack()">← 前の問題に戻る</button>`:'';
+  s.innerHTML=`<div class="card">
+    <div class="progress-area">
+      <div class="progress-top"><span class="progress-label">進捗</span><span class="progress-count">${current+1} / ${questions.length}</span></div>
+      <div class="progress-bar-bg"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
+    </div>
+    <div class="q-label">Q${current+1}</div>
+    <div class="q-hint">どちらの文章があなたをよりよく表していますか？</div>
+    <div class="options">
+      <button class="option-btn" onclick="answer('q1')"><div class="option-circle">1</div><div class="option-text">${q.q1.t}</div></button>
+      <button class="option-btn" onclick="answer('q2')"><div class="option-circle">2</div><div class="option-text">${q.q2.t}</div></button>
+    </div>
+    ${backBtn}
+  </div>`;
+}
+
+function renderResult(s){
+  const sorted=Object.entries(scores).sort((a,b)=>b[1]-a[1]);
+  const [tK,tS]=sorted[0],[sK,sS]=sorted[1];
+  const top=LANGS[tK],sec=LANGS[sK],total=questions.length;
+  const tips=getTips(tK);
+  const bars=sorted.map(([k,v],i)=>{
+    const l=LANGS[k];
+    const pct=Math.round(v/total*100);
+    const badge=i===0?'<span class="rank-badge">👑 1位</span>':i===1?'<span class="rank-badge second">2位</span>':'';
+    return `<div><div class="bar-top"><div class="bar-name">${l.emoji} ${l.name}${badge}</div><div class="bar-score" style="color:${l.color}">${v}点</div></div><div class="bar-bg"><div class="bar-fill" id="bf_${k}" style="width:0%;background:${l.color}"></div></div></div>`;
+  }).join('');
+  s.innerHTML=`<div class="card">
+    <div class="result-header">
+      <span class="result-emoji">${top.emoji}</span>
+      <div class="result-title">あなたのラブランゲージ</div>
+      <div class="result-sub">30問 診断完了！💕</div>
+    </div>
+    <div class="result-card" style="background:linear-gradient(135deg,#FFF0F6,#F5E6FF);border-color:rgba(255,107,157,.2)">
+      <div class="result-lang-name" style="color:${top.color}">${top.emoji} ${top.name} <span class="rank-badge">👑 1位</span></div>
+      <div class="result-lang-desc">${top.desc}</div>
+    </div>
+    ${sS>0?`<div class="result-card" style="background:linear-gradient(135deg,#F0F8FF,#E8F0FF);border-color:rgba(116,192,252,.25)"><div class="result-lang-name" style="color:${sec.color}">${sec.emoji} ${sec.name} <span class="rank-badge second">2位</span></div><div class="result-lang-desc">${sec.desc}</div></div>`:''}
+    <div style="margin-bottom:20px"><div class="tips-title">💡 あなたへのアドバイス</div>${tips.map(t=>`<div class="tip-item">${t}</div>`).join('')}</div>
+    <div class="bars">${bars}</div>
+    <button class="btn-primary" onclick="restart()">もう一度診断する 🔄</button>
+    <button class="btn-secondary" onclick="shareResult('${tK}','${sK}')">結果をコピーして共有 📋</button>
+  </div>`;
+  setTimeout(()=>{sorted.forEach(([k,v])=>{const el=document.getElementById('bf_'+k);if(el)el.style.width=Math.round(v/total*100)+'%';});},80);
+}
+
+let answerHistory=[]; // 各回答で選んだlangを記録
+
+function selectGender(g){
+  gender=g; questions=g==='male'?Q_MALE:Q_FEMALE;
+  scores={A:0,B:0,C:0,D:0,E:0}; current=0; answerHistory=[]; phase='quiz'; render();
+}
+function answer(choice){
+  const lang=questions[current][choice].l;
+  answerHistory.push(lang);
+  scores[lang]++;
+  current++;
+  if(current>=questions.length){phase='result';render();launchConfetti();}
+  else render();
+}
+function goBack(){
+  if(current===0) return;
+  current--;
+  const lang=answerHistory.pop();
+  scores[lang]--;
+  render();
+}
+function restart(){phase='gender';gender=null;answerHistory=[];render();}
+function getTips(k){
+  return {
+    A:["言葉で気持ちを伝えてもらうことが大切。パートナーに「声に出して言ってほしい」と直接伝えましょう。","褒め言葉・励ましの言葉が心の栄養。批判的な言葉は特に傷つきやすい傾向があります。","日記に感謝の言葉を書くなど、自分自身でも言葉の力を意識してみて。"],
+    B:["「一緒にいる時間」の質を重視します。スマホなしで向き合う時間を意識して作りましょう。","共通の体験や趣味を増やすことで満足感が高まります。","相手が話す時にしっかり聴くことが、最大の愛情表現になります。"],
+    C:["形ある物に気持ちを感じます。高額なものより「あなたのことを考えた」という思いが大切。","誕生日・記念日などを覚えてもらえることが深く刺さります。","小さなお土産や「あなたに似合いそう」の一言が大きな喜びになります。"],
+    D:["「やってくれること」が愛の言語。「何か手伝おうか？」の一言が心に響きます。","疲れた時に代わりにやってくれることが、言葉以上の愛情表現になります。","頼まなくても気づいて動いてくれることに特に感動します。"],
+    E:["スキンシップを通じて安心感・つながりを感じます。ハグや手をつなぐことを日常にしましょう。","遠距離の場合は、帰省時のスキンシップをいつも以上に意識することが大切です。","相手のペースを尊重しながら、二人にとって心地よい接触の形を探してみて。"]
+  }[k];
+}
+function shareResult(tK,sK){
+  const top=LANGS[tK],sec=LANGS[sK],gL=gender==='male'?'男性':'女性';
+  const text=`💕 ラブランゲージ診断（${gL}）結果\n\n🥇 ${top.emoji} ${top.name}\n🥈 ${sec.emoji} ${sec.name}\n\n#ラブランゲージ診断 #愛の5つの言語`;
+  if(navigator.clipboard){navigator.clipboard.writeText(text).then(()=>alert('クリップボードにコピーしました！'));}
+  else{prompt('コピーしてシェアしてね！',text);}
+}
+function launchConfetti(){
+  const canvas=document.getElementById('confetti');
+  const ctx=canvas.getContext('2d');
+  canvas.width=window.innerWidth;canvas.height=window.innerHeight;
+  const colors=['#FF6B9D','#FFD93D','#6BCB77','#74C0FC','#C77DFF','#FF8E72'];
+  const pts=Array.from({length:90},()=>({x:Math.random()*canvas.width,y:-10,r:Math.random()*7+3,color:colors[Math.floor(Math.random()*colors.length)],vy:Math.random()*3+2,vx:(Math.random()-.5)*2,angle:Math.random()*Math.PI*2,spin:(Math.random()-.5)*.2}));
+  let f=0;
+  function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);pts.forEach(p=>{ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);ctx.fillStyle=p.color;ctx.fillRect(-p.r/2,-p.r/2,p.r,p.r*1.6);ctx.restore();p.y+=p.vy;p.x+=p.vx;p.angle+=p.spin;});f++;if(f<130)requestAnimationFrame(draw);else ctx.clearRect(0,0,canvas.width,canvas.height);}
+  draw();
+}
+render();
+</script>
+</body>
+</html>
